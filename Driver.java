@@ -4,52 +4,90 @@ import java.util.Scanner;
 
 public class Driver {
 	
+	static Scanner s = new Scanner(System.in);
+	
 	public static void main(String[] args) {
-		Scanner s = new Scanner(System.in);
 		
-		System.out.print("Enter your name: ");
+		Player p1 = new Player();
+		Player p2 = new Player();
 		
-		String name = s.next();
+		play(p1, p2);
+	}
+	
+	private static void play(Player p1, Player p2) {
 		
-		Player p = new Player(name);
+		System.out.println("press 0 to exit, 1 for Single Player, and 2 to 2 Players..........");
+
+		int choice = s.nextInt();
 		
-		play(p, s);
+		switch (choice) {
+		case 0: 
+			break;
+		case 1:
+			Singleplayer(p1, p2);
+			break;
+			
+		case 2:
+			multiPlayer(p1, p2);
+			break;
+		default:
+			System.out.println("!!WrongChoice!!");
+			System.out.println();
+			play(p1, p2);
+		}
+		
 		s.close();
+		
 	}
 
-	private static void play(Player p, Scanner s) {
+	private static void multiPlayer(Player p1, Player p2) {
 		
-		Dice d = new Dice();
+		System.out.println("Decide among each other which one is Player 1 and other one is Player 2");
 		
-		int roll1 = d.Roll();
-		int roll2 = d.Roll();
+		System.out.println("Press any numerical key to begin");
 		
-		System.out.println("roll1(" + roll1 + ") + roll2(" + roll2 + ") = " + (roll1+roll2));
+		int n = s.nextInt();
 		
-		if(roll1 + roll2 == 7) {
-			if(p.lastwin) {
-				p.winStreak++;
+		int p1num1 = p1.roll();
+		System.out.println("Player 1 (Attempt 1) = " + p1num1);
+		int p2num1 = p2.roll();
+		System.out.println("Player 2 (Attempt 1) = " + p2num1);
+		int p1num2 = p1.roll();
+		System.out.println("Player 1 (Attempt 2) = " + p1num2);
+		int p2num2 = p2.roll();
+		System.out.println("Player 2 (Attempt 2) = " + p2num2);
+		
+		
+		if((p1num1 + p1num2) == (p2num1 + p2num2)) {
+			if(p2num1 + p2num2 == 7) {
+				System.out.println(">> It's a Tie !!");
 			}else {
-				p.lastwin = true;
-				p.winStreak = 1;
+				System.out.println(">> Nobody Won...");
 			}
-			
-			System.out.println("Great, you have just won! Your winning steak: " + p.winStreak);
+		}else if(p1num1 + p1num2 == 7) {
+			System.out.println(">> Player 1 is the winner");
+		}else if(p2num1 + p2num2 == 7) {
+			System.out.println(">> Player 2 is the winner");
 		}else {
-			if(p.lastwin) {
-				System.out.println("your winning streak got broke!!");
-			}
-			p.winStreak = 0;
-			p.lastwin = false;
-			
-			System.out.println("Loose!, better luck next time");
+			System.out.println(">> Nobody Won...");
 		}
 		
+		p1.results(p1num1 + p1num2 == 7);
+		p2.results(p2num1 + p2num2 == 7);
 		
-		System.out.println("Your winning streak: " + p.winStreak + ", Press 1 to play again");
-		if(s.nextInt() == 1) {
-			play(p, s);
-		}
+		play(p1, p2);
+	}
+
+	private static void Singleplayer(Player p1, Player p2) {
+		
+		int num1 = p1.roll();
+		System.out.println("roll 1 : " + num1);
+		int num2 = p1.roll();
+		System.out.println("roll 2 : " + num2);
+		
+		p1.results(num1 + num2 == 7);
+		
+		play(p1, p2);
 		
 	}
 
